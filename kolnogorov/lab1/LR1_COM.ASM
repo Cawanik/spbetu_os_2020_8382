@@ -1,19 +1,23 @@
 TESTPC     SEGMENT
-           ASSUME  CS:TESTPC, DS:TESTPC, ES:NOTHING, SS:NOTHING
+           ; ASSUME  CS:TESTPC, DS:TESTPC, ES:NOTHING, SS:NOTHING
            ORG     100H
 
 START:     JMP     BEGIN 
 ; data
-NEW_LINE    db 						   10,13,'$'
-DOS_VERSION db '00.00',                10,13,'$'
-TYPE1       db 'PC',                   10,13,'$'
-TYPE2       db 'PC/XT',                10,13,'$'
-TYPE3       db 'AT',                   10,13,'$'
-TYPE4       db 'PS2 модель 30',        10,13,'$'
-TYPE5       db 'PS2 модель 50 или 60', 10,13,'$'
-TYPE6       db 'PS2 80',               10,13,'$'
-TYPE7       db 'PCjr',                 10,13,'$'
-TYPE8       db 'PC Convertible',       10,13,'$'
+NEW_LINE        db 10,13,'$'
+STR_PC_TYPE     db 'IBM PC type: $'
+STR_DOS_VERSION db 'MSDOS version: $'
+STR_OEM_NUMBER  db 'OEM serial number: $'
+STR_USER_NUMBER db 'User serial number: $'
+DOS_VERSION     db '00.00',                10,13,'$'
+TYPE1           db 'PC',                   10,13,'$'
+TYPE2           db 'PC/XT',                10,13,'$'
+TYPE3           db 'AT',                   10,13,'$'
+TYPE4           db 'PS2 модель 30',        10,13,'$'
+TYPE5           db 'PS2 модель 50 или 60', 10,13,'$'
+TYPE6           db 'PS2 80',               10,13,'$'
+TYPE7           db 'PCjr',                 10,13,'$'
+TYPE8           db 'PC Convertible',       10,13,'$'
 
 PRINT_BYTE      PROC near
 ; prints AL as two hex digits
@@ -102,6 +106,11 @@ BYTE_TO_DEC    ENDP
 BEGIN: 
         mov AX, 0F000h
         mov ES, AX
+
+		mov DX, offset STR_PC_TYPE
+        mov AH, 09h
+        int 21h
+
         mov AX, ES:[0FFFEh]
         mov DX, 0
 TEST_TYPE1:
@@ -147,6 +156,10 @@ WRITE_TYPE:
 TYPE_END:
 
 PRINT_VERSION:
+		mov DX, offset STR_DOS_VERSION
+        mov AH, 09h
+        int 21h
+
 		mov AH, 30h
 		int 21h
 
@@ -163,6 +176,10 @@ PRINT_VERSION:
 		int 21h
 
 PRINT_OEM:
+		mov DX, offset STR_OEM_NUMBER
+        mov AH, 09h
+        int 21h
+
 		mov AH, 30h
 		int 21h
 
@@ -170,12 +187,16 @@ PRINT_OEM:
 		call PRINT_BYTE
 
 PRINT_SERIAL:
-		mov AH, 30h
-		int 21h
-
 		mov DX, offset NEW_LINE
         mov AH, 09h
         int 21h
+
+		mov DX, offset STR_USER_NUMBER
+        mov AH, 09h
+        int 21h
+
+		mov AH, 30h
+		int 21h
 
 		mov AL, BL
 		call PRINT_BYTE

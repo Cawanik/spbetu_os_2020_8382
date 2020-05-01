@@ -1,19 +1,23 @@
 AStack SEGMENT STACK
-	DW 100 DUP(?)
+	DW 128 DUP(?)
 AStack ENDS
 
 
 DATA SEGMENT
-	NEW_LINE    db 						   0DH,0AH,'$'
-	DOS_VERSION db '00.00',                0DH,0AH,'$'
-	TYPE1       db 'PC',                   0DH,0AH,'$'
-	TYPE2       db 'PC/XT',                0DH,0AH,'$'
-	TYPE3       db 'AT',                   0DH,0AH,'$'
-	TYPE4       db 'PS2 модель 30',        0DH,0AH,'$'
-	TYPE5       db 'PS2 модель 50 или 60', 0DH,0AH,'$'
-	TYPE6       db 'PS2 80',               0DH,0AH,'$'
-	TYPE7       db 'PCjr',                 0DH,0AH,'$'
-	TYPE8       db 'PC Convertible',       0DH,0AH,'$'
+	NEW_LINE        db 						   0DH,0AH,'$'
+	STR_PC_TYPE     db 'IBM PC type: $'
+	STR_DOS_VERSION db 'MSDOS version: $'
+	STR_OEM_NUMBER  db 'OEM serial number: $'
+	STR_USER_NUMBER db 'User serial number: $'
+	DOS_VERSION     db '00.00',                0DH,0AH,'$'
+	TYPE1           db 'PC',                   0DH,0AH,'$'
+	TYPE2           db 'PC/XT',                0DH,0AH,'$'
+	TYPE3           db 'AT',                   0DH,0AH,'$'
+	TYPE4           db 'PS2 модель 30',        0DH,0AH,'$'
+	TYPE5           db 'PS2 модель 50 или 60', 0DH,0AH,'$'
+	TYPE6           db 'PS2 80',               0DH,0AH,'$'
+	TYPE7           db 'PCjr',                 0DH,0AH,'$'
+	TYPE8           db 'PC Convertible',       0DH,0AH,'$'
 DATA ENDS
 
 
@@ -108,6 +112,10 @@ BEGIN 		  PROC far
 		mov  AX, DATA
 		mov  DS, AX
 
+		mov DX, offset STR_PC_TYPE
+        mov AH, 09h
+        int 21h
+
         mov AX, 0F000h
         mov ES, AX
         mov AX, ES:[0FFFEh]
@@ -155,6 +163,10 @@ WRITE_TYPE:
 TYPE_END:
 
 PRINT_VERSION:
+		mov DX, offset STR_DOS_VERSION
+        mov AH, 09h
+        int 21h
+
 		mov AH, 30h
 		int 21h
 
@@ -171,6 +183,10 @@ PRINT_VERSION:
 		int 21h
 
 PRINT_OEM:
+		mov DX, offset STR_OEM_NUMBER
+        mov AH, 09h
+        int 21h
+
 		mov AH, 30h
 		int 21h
 
@@ -178,12 +194,16 @@ PRINT_OEM:
 		call PRINT_BYTE
 
 PRINT_SERIAL:
-		mov AH, 30h
-		int 21h
-
 		mov DX, offset NEW_LINE
         mov AH, 09h
         int 21h
+
+		mov DX, offset STR_USER_NUMBER
+        mov AH, 09h
+        int 21h
+
+		mov AH, 30h
+		int 21h
 
 		mov AL, BL
 		call PRINT_BYTE
