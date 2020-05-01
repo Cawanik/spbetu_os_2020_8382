@@ -10,15 +10,26 @@ CODE SEGMENT
 		KEEP_PSP  dw 0
 		SIGNATURE dw 1234h
 		COUNTER   db '000$'
+		INT_STACK dw 64 dup(?)
+		KEEP_SS   dw 0
+		KEEP_SP   dw 0
+		KEEP_AX   dw 0
 
 	MY_INT_START:
-		push AX
+		mov KEEP_SS, SS
+		mov KEEP_SP, SP
+		mov KEEP_AX, AX
+		mov AX, SEG INT_STACK
+		mov SS, AX
+		mov AX, offset INT_STACK
+		add AX, 128 ; add stack size
+		mov SP, AX
+
 		push BX
 		push CX
 		push DX
 		push SI
 		push DS
-		push ES
 
 		; set DS to int's data segment
 		mov AX, SEG KEEP_CS
@@ -76,8 +87,8 @@ CODE SEGMENT
 			mov BH, 0
 			mov CX, 3 				; string length
 			int 10h
-			pop ES
 			pop BP
+			pop ES
 
 		RESET_CURSOR:
 			pop DX
@@ -85,16 +96,20 @@ CODE SEGMENT
 			mov BH, 0
 			int 10h
 
-		pop ES
 		pop DS
 		pop SI
 		pop DX
 		pop CX
 		pop BX
-		pop AX
+
+		mov AX, KEEP_SS
+		mov SS, AX
+		mov SP, KEEP_SP
+		mov AX, KEEP_AX
 
 		mov AL, 20h
 		out 20H, AL
+
 		iret
 	MY_INT ENDP
 	MY_INT_END:
@@ -179,12 +194,9 @@ CODE SEGMENT
 
 		; make resident
 		mov DX, offset MY_INT_END
-		shr DX, 1
-		shr DX, 1
-		shr DX, 1
-		shr DX, 1
+		mov CL, 4
+		shr DX, CL
 		add DX, 11h
-		inc DX
 		mov AX, 0
 		mov AH, 31h
 		int 21h
@@ -221,6 +233,7 @@ CODE SEGMENT
 
 		mov AX, ES:[BX+SI] 		; cs
 		mov DX, ES:[BX+SI+2] 	; ip
+
 		push DS
 		mov DS, AX
 		mov AH, 25h
