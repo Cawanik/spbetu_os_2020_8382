@@ -9,9 +9,21 @@ CODE SEGMENT
 		KEEP_CS   dw 0
 		KEEP_PSP  dw 0
 		SIGNATURE dw 1234h
+		INT_STACK dw 64 dup(?)
+		KEEP_SS   dw 0
+		KEEP_SP   dw 0
+		KEEP_AX   dw 0
 		
 	MY_INT_START:	
-		push AX
+		mov KEEP_SS, SS
+		mov KEEP_SP, SP
+		mov KEEP_AX, AX
+		mov AX, SEG INT_STACK
+		mov SS, AX
+		mov AX, offset INT_STACK
+		add AX, 128 ; add stack size
+		mov SP, AX
+
 		push BX
 		push CX
 		push DX
@@ -69,7 +81,11 @@ CODE SEGMENT
 		pop DX
 		pop CX
 		pop BX
-		pop AX
+
+		mov AX, KEEP_SS
+		mov SS, AX
+		mov SP, KEEP_SP
+		mov AX, KEEP_AX
 
 		mov AL, 20h
 		out 20H, AL
