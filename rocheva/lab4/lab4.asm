@@ -3,7 +3,7 @@ AStack SEGMENT STACK
 AStack ENDS
 
 DATA SEGMENT
-    INT_LOADED db 0
+	INT_LOADED db 0
 	MESSAGE_INT_LOADED db 'Interruption loaded$'
 	MESSAGE_INT_NOT_LOADED db 'Interruption unloaded$'
 DATA ENDS
@@ -117,7 +117,7 @@ outputBP PROC near
 	push bx
 	mov ah, 13h
 	mov al, 1
-	mov bl, 04h ;красненый цвет
+	mov bl, 04h ;красный цвет
 	mov cx, 18
 	mov bh, 0
 	int 10h
