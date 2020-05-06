@@ -107,10 +107,10 @@ byte_to_dec endp
 begin:
   mov ax, @data
   mov ds, ax
-  
+
   mov ax, 0f000h
-	mov es, ax 
-	mov al, es:[0fffeh] 
+  mov es, ax 
+  mov al, es:[0fffeh] 
   
   mov cx, count_types
   dec cx
