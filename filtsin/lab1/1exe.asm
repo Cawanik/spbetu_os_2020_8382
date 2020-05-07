@@ -39,7 +39,6 @@ serial_title db 'Serial number: ', '$'
 serial_value db '000', 13, 10, '$'
 
 .code
-jmp begin
 tetr_to_hex proc near
   and al, 0fh
   cmp al, 09
@@ -122,7 +121,6 @@ begin:
     je result_type
     loop find_type
   fail_type:
-    ; Ничего не нашли
     mov dx, offset another_t
     mov ah, 09h
     int 21h
@@ -133,22 +131,16 @@ begin:
     int 21h
     jmp finish_type
   result_type:
-    ; В cx индекс с нужным типом
     mov ax, cx
     mov si, offset offset_array
     mov bx, cx
-    add bx, bx ; dw - 2 байта! а bx * 2 ниже не работает
+    add bx, bx
     mov dx, ds:[si + bx]
     mov ah, 09h
     int 21h
   finish_type:
 
-  ; Печать версии
   mov dx, offset os_ver_title
-  mov ah, 09h
-  int 21h
-
-  mov ah, 30h
   int 21h
   
   mov si, offset os_ver
@@ -167,7 +159,6 @@ begin:
   mov ah, 09h
   int 21h
 
-  ; Печать серийника OEM
   mov dx, offset oem_title
   mov ah, 09h
   int 21h
@@ -178,7 +169,7 @@ begin:
   mov dx, offset oem_value
   mov ah, 09h
   int 21h
-  ; Печать серийника пользователя
+
   mov dx, offset serial_title
   int 21h
 
@@ -203,4 +194,4 @@ begin:
   xor al, al
   mov ah, 4ch
   int 21h
-end
+end begin
