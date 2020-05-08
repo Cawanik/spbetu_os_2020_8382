@@ -11,7 +11,7 @@ expanded_memory_value db '000000', 13, 10, '$'
 
 mcb_start db 'MCB type = ', '$'
 mcb_owner db ' | Owner = ', '$'
-mcb_owner_value db '0000', '$'
+mcb_owner_value db '00000', '$'
 mcb_size db ' | Size(B) = ', '$'
 mcb_size_value db '00000', '$'
 mcb_last db " | Last bytes = ", '$'
