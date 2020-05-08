@@ -82,10 +82,15 @@ byte_to_dec endp
 
 wrd_to_dec proc near
   push bx
-  mov bl, ah
-  call byte_to_dec
-  mov al, bl
-  call byte_to_dec
+  mov bx, 10
+  in_loop:
+    div bx
+    add dl, 030h
+    mov [si], dl
+    xor dx, dx
+    dec si
+    cmp ax, 0
+    jne in_loop
   pop bx
   ret
 wrd_to_dec endp 
