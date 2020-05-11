@@ -1,21 +1,20 @@
-git fetch rakhele           # Рочева
-git fetch sinelnikovmaxim   # Синельников
-git fetch snchz29           # Терехов
-git fetch AhimasYD          # Янкин
-git fetch pajecawa          # Колногоров
-git fetch LangerKrieg       # Наконечная
-git fetch PavelChernitsyn   # Черницын
-git fetch Pavel-by          # Мирончик
-git fetch inoriin           # Чирков
-git fetch ephemerno         # Ефимова
-# git fetch  #
-# git fetch  #
-# git fetch  #
-# git fetch  #
-# git fetch  #
-# git fetch  #
-# git fetch  #
-# git fetch  #
-# git fetch  #
-# git fetch  #
-# git fetch  #
+git fetch rakhele          # Рочева
+git fetch sinelnikovmaxim  # Синельников
+git fetch snchz29          # Терехов
+git fetch AhimasYD         # Янкин
+git fetch pajecawa         # Колногоров
+git fetch LangerKrieg      # Наконечная
+git fetch PavelChernitsyn  # Черницын
+git fetch Pavel-by         # Мирончик
+git fetch inoriin          # Чирков
+git fetch ephemerno        # Ефимова
+git fetch alexgorderr      # Гордиенко
+git fetch ershovdev        # Ершов
+git fetch negativename     # Кобенко
+git fetch a-kuzina         # Кузина
+git fetch smotritetamptiza # Кулачкова
+git fetch nechepurenkoN    # Нечепуренко
+git fetch Cawanik          # Никитин
+git fetch filtsin          # Фильцин
+git fetch Gargamell1       # Щеглов
+git fetch Anakael          # Щемель
