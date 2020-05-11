@@ -120,46 +120,38 @@ BEGIN:
         mov ax,0F000h
         mov es,ax
         mov al,es:[0FFFEh]
-        call BYTE_TO_HEX
+        ;call BYTE_TO_HEX
 
         mov dx, offset FF_name
-        mov cx, 0FFh
-        cmp cx, ax
+        cmp al, 0FFh
         je WRITE_TYPE
 
         mov dx, offset FE_name
-        mov cx, 0FEh
-        cmp cx, ax
+        cmp al, 0FEh
         je WRITE_TYPE
 
         mov dx, offset FB_name
-        mov cx, 0FBh
-        cmp cx, ax
+        cmp al, 0FBh
         je WRITE_TYPE
 
         mov dx, offset FC_name
-        mov cx, 0FCh
-        cmp cx, ax
+        cmp al, 0FCh
         je WRITE_TYPE
 
         mov dx, offset FA_name
-        mov cx, 0FAh
-        cmp cx, ax
+        cmp al, 0FAh
         je WRITE_TYPE
 
         mov dx, offset F8_name
-        mov cx, 0F8h
-        cmp cx, ax
+        cmp al, 0F8h
         je WRITE_TYPE
 
         mov dx, offset FD_name
-        mov cx, 0FDh
-        cmp cx, ax
+        cmp al, 0FDh
         je WRITE_TYPE
 
         mov dx, offset F9_name
-        mov cx, 0F9h
-        cmp cx, ax
+        cmp al, 0F9h
         je WRITE_TYPE
 
 WRITE_TYPE:
