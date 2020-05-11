@@ -3,15 +3,19 @@ ASTACK SEGMENT STACK
 ASTACK ENDS
 
 DATA SEGMENT
-    FF_name         db  'PC',13,10,'$'
-    FE_name         db  'PC/XT',13,10,'$'
-    FB_name         db  'PC/XT',13,10,'$'
-    FC_name         db  'AT',13,10,'$'
-    FA_name         db  'PS2 model 30',13,10,'$'
-    F8_name         db  'PS2 model 80',13,10,'$'
-    FD_name         db  'PCjr',13,10,'$'
-    F9_name         db  'PC Convertible',13,10,'$'
-    dos_version     db  '00.00',13,10,'$'
+        FF_name         db  'PC',13,10,'$'
+        FE_name         db  'PC/XT',13,10,'$'
+        FB_name         db  'PC/XT',13,10,'$'
+        FC_name         db  'AT',13,10,'$'
+        FA_name         db  'PS2 model 30',13,10,'$'
+        F8_name         db  'PS2 model 80',13,10,'$'
+        FD_name         db  'PCjr',13,10,'$'
+        F9_name         db  'PC Convertible',13,10,'$'
+        dos_version_header db 'System version: $'
+        dos_version db '00.00',13,10,'$'
+        pc_type db 'PC type: $'
+        serial_number db 'Serial number OEM: $'
+        user_serial_number db 'User serial number: $'
     ENDL            db  13,10,'$'
 DATA ENDS
 
@@ -118,57 +122,63 @@ WRITE_AL_HEX ENDP
 BEGIN   PROC    NEAR
         mov ax, DATA
         mov ds, ax
+        
+        mov dx, offset pc_type
+        mov ah, 09h
+        int 21h
 
         mov ax,0F000h
         mov es,ax
         mov al,es:[0FFFEh]
-        call BYTE_TO_HEX
 
         mov dx, offset FF_name
-        mov cx, 0FFh
-        cmp cx, ax
+        cmp al, 0FFh
         je WRITE_TYPE
 
         mov dx, offset FE_name
-        mov cx, 0FEh
-        cmp cx, ax
+        cmp al, 0FEh
         je WRITE_TYPE
 
         mov dx, offset FB_name
-        mov cx, 0FBh
-        cmp cx, ax
+        cmp al, 0FBh
         je WRITE_TYPE
 
         mov dx, offset FC_name
-        mov cx, 0FCh
-        cmp cx, ax
+        cmp al, 0FCh
         je WRITE_TYPE
 
         mov dx, offset FA_name
-        mov cx, 0FAh
-        cmp cx, ax
+        cmp al, 0FAh
         je WRITE_TYPE
 
         mov dx, offset F8_name
-        mov cx, 0F8h
-        cmp cx, ax
+        cmp al, 0F8h
         je WRITE_TYPE
 
         mov dx, offset FD_name
-        mov cx, 0FDh
-        cmp cx, ax
+        cmp al, 0FDh
         je WRITE_TYPE
 
         mov dx, offset F9_name
-        mov cx, 0F9h
-        cmp cx, ax
+        cmp al, 0F9h
         je WRITE_TYPE
+
+        call WRITE_AL_HEX
+        mov dx, offset ENDL
+        mov ah, 09h
+        int 21h
+        jmp OS_VERSION
 
 WRITE_TYPE:
         mov ah,09h
         int 21h
-
+        jmp OS_VERSION
+OS_VERSION:
         ; Вывод версии системы
+        mov dx, offset dos_version_header
+        mov ah, 09h
+        int 21h
+
         mov ah, 30h
         int 21h
 
@@ -186,6 +196,10 @@ WRITE_TYPE:
         int 21h
 
         ; Серийный номер OEM
+        mov dx, offset serial_number
+        mov ah, 09h
+        int 21h
+
         mov ah, 30h
         int 21h
 
@@ -197,6 +211,10 @@ WRITE_TYPE:
         int 21h
 
         ; Серийный номер пользователя
+        mov dx, offset user_serial_number
+        mov ah, 09h
+        int 21h
+
         mov ah, 30h
         int 21h
 
