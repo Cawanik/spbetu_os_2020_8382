@@ -119,10 +119,13 @@ WRITE_AL_HEX ENDP
 ;--------------------------
 ; CODE
 BEGIN:
+        mov dx, offset pc_type
+        mov ah, 09h
+        int 21h
+
         mov ax,0F000h
         mov es,ax
         mov al,es:[0FFFEh]
-        ;call BYTE_TO_HEX
 
         mov dx, offset FF_name
         cmp al, 0FFh
@@ -156,14 +159,17 @@ BEGIN:
         cmp al, 0F9h
         je WRITE_TYPE
 
+        call WRITE_AL_HEX
+        mov dx, offset ENDL
+        mov ah, 09h
+        int 21h
+        jmp OS_VERSION
+
 WRITE_TYPE:
-        push dx
-        mov dx, offset pc_type 
         mov ah,09h
         int 21h
-        pop dx
-        int 21h
-
+        jmp OS_VERSION
+OS_VERSION:
         ; Вывод версии системы
         mov dx, offset dos_version_header
         mov ah, 09h
