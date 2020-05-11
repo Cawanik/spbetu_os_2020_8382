@@ -12,9 +12,11 @@ FA_name db 'PS2 model 30',13,10,'$'
 F8_name db 'PS2 model 80',13,10,'$'
 FD_name db 'PCjr',13,10,'$'
 F9_name db 'PC Convertible',13,10,'$'
+dos_version_header db 'System version: $'
 dos_version db '00.00',13,10,'$'
-serial_number db 13,10,'Serial number OEM: $'
-user_serial_number db 13,10,'User serial number: $'
+pc_type db 'PC type: $'
+serial_number db 'Serial number OEM: $'
+user_serial_number db 'User serial number: $'
 ENDL db 13,10,'$'
 
 ; PROCEDURES
@@ -155,10 +157,18 @@ BEGIN:
         je WRITE_TYPE
 
 WRITE_TYPE:
+        push dx
+        mov dx, offset pc_type 
         mov ah,09h
+        int 21h
+        pop dx
         int 21h
 
         ; Вывод версии системы
+        mov dx, offset dos_version_header
+        mov ah, 09h
+        int 21h
+
         mov ah, 30h
         int 21h
 
@@ -176,6 +186,10 @@ WRITE_TYPE:
         int 21h
 
         ; Серийный номер OEM
+        mov dx, offset serial_number
+        mov ah, 09h
+        int 21h
+
         mov ah, 30h
         int 21h
 
@@ -187,6 +201,10 @@ WRITE_TYPE:
         int 21h
 
         ; Серийный номер пользователя
+        mov dx, offset user_serial_number
+        mov ah, 09h
+        int 21h
+
         mov ah, 30h
         int 21h
 
