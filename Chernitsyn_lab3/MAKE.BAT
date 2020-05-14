@@ -1,0 +1,12 @@
+tasm LR3_1.ASM
+tlink -t LR3_1.OBJ
+LR3_1.COM > OUT1.TXT
+tasm LR3_2.ASM
+tlink -t LR3_2.OBJ
+LR3_2.COM > OUT2.TXT
+tasm LR3_3.ASM
+tlink -t LR3_3.OBJ
+LR3_3.COM > OUT3.TXT
+tasm LR3_4.ASM
+tlink -t LR3_4.OBJ
+LR3_4.COM > OUT4.TXT
