@@ -12,6 +12,10 @@ PS25060 db 0f8h
 PCjr db 0fdh
 PCConv db 0f9h
 
+PC_TYPE_STRING db 'PC TYPE: $'
+SYSTEM_VERSION_STRING db 'SYSTEM VERSION: $'
+OEM_STRING_LABEL db 'OEM: $'
+NUMBER_STRING_LABEL db 'NUMBER: $'
 PC_STRING db 'PC', 13, 10, '$'
 PC_XT_STRING db 'PC/XT', 13, 10, '$'
 AT_STRING db 'AT', 13, 10, '$'
@@ -90,6 +94,9 @@ BEGIN:
 	mov es, ax
 	mov al, es:[0fffeh]
 
+	mov dx, offset PC_TYPE_STRING
+	call PRINT
+
 	cmp al, PC
 	je print_PC
 	cmp al, PCXT_1
@@ -157,11 +164,17 @@ BEGIN:
 	add si, 4
 	mov al, dh
 	call BYTE_TO_DEC
+	mov dx, offset SYSTEM_VERSION_STRING
+	call PRINT
 	mov dx, offset VERSION_STRING
+	call PRINT
+	mov dx, offset OEM_STRING_LABEL
 	call PRINT
 	mov si, offset OEM_STRING
 	mov al, bh
 	mov dx, offset OEM_STRING
+	call PRINT
+	mov dx, offset NUMBER_STRING_LABEL
 	call PRINT
 	mov si, offset NUMBER_STRING
 	mov al, bl
