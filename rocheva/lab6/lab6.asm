@@ -7,9 +7,9 @@ DATA SEGMENT
 	MESSAGE_NO_MEMORY db 'Not enough memory to complete the function.', 0DH,0AH, '$'
 	MESSAGE_INVALID_ADDRESS db 'Invalid memory block address.', 0DH,0AH, '$'
 	PARAMETER_BLOCK dw ? 
-					dd ? 
-					dd ? 
-					dd ?
+			dd ? 
+			dd ? 
+			dd ?
 	KEEP_SP dw ?
 	KEEP_SS dw ?
 	MESSAGE_INVALID_NUM_FUNC db 'Function number is invalid.', 0DH,0AH, '$'
@@ -70,18 +70,18 @@ FREE_MEMORY ENDP
 
 CREATE_BLOCK PROC near
 	mov bx, offset PARAMETER_BLOCK
-	mov	ax, es
+	mov ax, es
 
-	mov	cx, 0
+	mov cx, 0
 	mov [bx], cx
 	mov [bx+2], ax 
-	mov	cx, 80h
+	mov cx, 80h
 	mov [bx+4], cx
 	mov [bx+6], ax
-	mov	cx, 5Ch
+	mov cx, 5Ch
 	mov [bx+8], cx
 	mov [bx+10], ax
-	mov	cx, 6Ch
+	mov cx, 6Ch
 	mov [bx+12], cx
 		
 	ret
@@ -95,7 +95,7 @@ CREATE_STRING PROC near
 EnvLoop:
 	mov dl, es:[si]
 	cmp dl, 00h		
-	je 	EnvEnd	
+	je EnvEnd	
 	inc si
 	jmp EnvLoop
 	
@@ -253,21 +253,20 @@ BYTE_TO_HEX PROC near
    pop CX
    ret
 BYTE_TO_HEX ENDP
-
-
+   
 MAIN PROC FAR
-	mov ax, DATA
-	mov ds, ax
-
-	call FREE_MEMORY
-	call CREATE_BLOCK
-	call CREATE_STRING
-	call RUN_PROC
-	
-	xor ax, ax
-	mov ah, 4Ch
-	int 21h
-	ret
+   mov ax, DATA
+   mov ds, ax
+   
+   call FREE_MEMORY
+   call CREATE_BLOCK
+   call CREATE_STRING
+   call RUN_PROC
+   
+   xor ax, ax
+   mov ah, 4Ch
+   int 21h
+   ret
 MAIN ENDP
 CODE ENDS
 LAST_SEGMENT SEGMENT
