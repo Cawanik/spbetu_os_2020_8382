@@ -107,13 +107,14 @@ resident_begin endp
 
 last_byte label word
 
+labbb db '00000', 13, 10, '$'
+
 unload_handler proc near
   push ds
   push ax
   push es
   push bx
   push dx
-
 
   mov dx, 0
   mov ah, 025h
@@ -147,7 +148,6 @@ unload_handler proc near
   mov es, bx
   mov ah, 049h
   int 21h
-
 
   pop dx
   pop bx
@@ -258,6 +258,9 @@ transient_begin:
   jne unset_command_not_set
 
   unset_command_set:
+    call check_handler
+    cmp ax, 1
+    jne finish
     call unload_handler
     jmp finish
 
