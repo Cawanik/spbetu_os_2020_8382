@@ -72,18 +72,18 @@ CREATE_BLOCK PROC near
 	push dx
 
 	mov bx, offset PARAMETER_BLOCK
-	mov	ax, es
+	mov ax, es
 
-	mov	cx, 0
+	mov cx, 0
 	mov [bx], cx
 	mov [bx+2], ax 
-	mov	cx, 80h
+	mov cx, 80h
 	mov [bx+4], cx
 	mov [bx+6], ax
-	mov	cx, 5Ch
+	mov cx, 5Ch
 	mov [bx+8], cx
 	mov [bx+10], ax
-	mov	cx, 6Ch
+	mov cx, 6Ch
 	mov [bx+12], cx
 	
 	pop dx
@@ -101,7 +101,7 @@ CREATE_STRING PROC near
 EnvLoop:
 	mov dl, es:[si]
 	cmp dl, 00h		
-	je 	EnvEnd	
+	je EnvEnd	
 	inc si
 	jmp EnvLoop
 	
