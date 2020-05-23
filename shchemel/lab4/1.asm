@@ -36,6 +36,7 @@ HANDLER PROC far
 		push ds
 		push dx
 		push si
+		push bp
 
 		mov ax, seg HANDLER_DATA
 		mov ds, ax
@@ -52,15 +53,16 @@ HANDLER PROC far
 		mov bp, offset COUNTER_STRING
 		call OUTPUT_BP
 
-  		mov al, 20h
-  		out 20h, al
-		
+		pop bp
 		pop si
 		pop dx
 		pop ds
 		pop es
 		mov ss, KEEP_SS
   		mov sp, KEEP_SP
+
+		mov al, 20h
+  		out 20h, al
   		mov ax, KEEP_AX
   		iret
 HANDLER ENDP
