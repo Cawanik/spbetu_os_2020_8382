@@ -132,6 +132,7 @@ set_inter proc near
     push bx
     push dx
     push di
+    push si
     push cx
     push ds
     push es
@@ -142,6 +143,18 @@ set_inter_get_prev:
     int 21h
     mov keep_cs, es
     mov keep_ip, bx
+
+set_inter_check:
+    mov si, offset inter_signature
+    sub si, offset main
+    mov ax, es:[bx+si] ; get resident_data
+    cmp ax, 1337h ; check signature to be equal 1337h
+    jne set_inter_set_new
+
+set_inter_already_set:
+    mov di, offset msg_inter_already
+    call print
+    jmp set_inter_final
 
 set_inter_set_new:
     push ds
@@ -169,6 +182,7 @@ set_inter_final:
     pop es
     pop ds
     pop cx 
+    pop si
     pop di
     pop dx
     pop bx
@@ -273,6 +287,7 @@ dataseg segment
     un_flag dw 0
     msg_inter_loaded db "Interruption has been loaded", 13, 10, "$"
     msg_inter_unloaded db "Interruption has been unloaded", 13, 10, "$"
+    msg_inter_already db "Interruption is already loaded", 13, 10, "$"
 dataseg ends
 
 end init
