@@ -144,10 +144,10 @@ prepare_string proc
 		jne do2
 	
 	go:
-	;add di,4
 	lea di, PATH
+	add si,4
 	cmp byte ptr es:[si],00h
-	je finish_
+	je path_end
 	do3:
 		mov dl,es:[si]
 		mov [di],dl
@@ -155,11 +155,9 @@ prepare_string proc
 		inc di
 		cmp byte ptr es:[si],00h
 		jne do3
-	
-	finish_:
-	
 
 	path_end:
+		sub di,7
 		mov [di], byte ptr 'O'
 		mov [di+1], byte ptr 'S'	
 		mov [di+2], byte ptr '_'
@@ -170,9 +168,6 @@ prepare_string proc
 		mov [di+7], byte ptr 'M'
 		mov [di+8], byte ptr 00h
 
-	;pop si
-	;pop dx
-	;pop ax
 	ret
 prepare_string endp
 
