@@ -9,7 +9,7 @@ Message1   db 'Main memory block is destroyed', 0dh, 0ah, '$'
 Message2   db 'Memory is not enough', 0dh, 0ah, '$'
 Message3   db 'Address is not recognised', 0dh, 0ah, '$'
 
-Message4   db 'function's number is wrong', 0dh, 0ah, '$'
+Message4   db 'functions number is wrong', 0dh, 0ah, '$'
 Message5   db 'file is not found', 0dh, 0ah, '$'
 Message6   db 'disk error', 0dh, 0ah, '$'
 Message7   db 'memory size is not enough', 0dh, 0ah, '$'
