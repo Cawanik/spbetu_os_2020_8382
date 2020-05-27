@@ -6,13 +6,13 @@ ROUT   PROC    FAR
 		ROUTDATA:
 		KEY                DB  0
 		SIGNATURE          DW  2228h
-		KEEP_AX 	       DW  0
-		KEEP_SS        	       DW  0
-		KEEP_SP 	       DW  0
 		KEEP_IP 	       DW  0
 		KEEP_CS 	       DW  0
 		KEEP_PSP 	       DW  0
-		_STACK                 DW 100 dup(0)
+		KEEP_AX 	       DW  0
+		KEEP_SS        	       DW  0
+		KEEP_SP 	       DW  0
+		_STACK                 DW 128 dup(0)
 		
     _start:
 		mov 	KEEP_AX, AX
