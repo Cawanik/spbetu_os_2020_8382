@@ -9,8 +9,20 @@ ROUT   PROC    FAR
 		KEEP_IP 	       DW  0
 		KEEP_CS 	       DW  0
 		KEEP_PSP 	       DW  0
-			
+		KEEP_AX 	       DW  0
+		KEEP_SS        	       DW  0
+		KEEP_SP 	       DW  0
+		_STACK                 DW 128 dup(0)
     _start:
+		mov 	KEEP_AX, AX
+		mov 	KEEP_SP, SP
+		mov 	KEEP_SS, SS
+		mov 	AX, SEG _STACK
+		mov 	SS, AX
+		mov 	AX, offset _STACK
+		add 	AX, 256
+		mov 	SP, AX	
+
 		push	AX
 		push    BX
 		push    CX
@@ -78,6 +90,10 @@ ROUT   PROC    FAR
 		pop     BX
 		pop		AX
 
+		mov 	SP, KEEP_SP
+		mov 	AX, KEEP_SS
+		mov 	SS, AX
+	        mov 	AX, KEEP_AX
 
 		mov     AL, 20h
 		out     20h, AL
