@@ -2,10 +2,9 @@ CODE SEGMENT
 ASSUME cs:CODE, ds:DATA, ss:AStack
 ROUT PROC far
     jmp handler_start
-HANDLER_DATA:
     HANDLER_SIGN DW 4200h
-    KEEP_CS DW 0
     KEEP_IP DW 0
+    KEEP_CS DW 0
     KEEP_PSP DW 0
     KEEP_SS DW 0
     KEEP_SP DW 0
@@ -13,15 +12,15 @@ HANDLER_DATA:
     COUNT DW 0
     M_COUNT DB '00000',0Dh,0Ah,'$'
     HANDLER_STACK DW 100 DUP(0)
+    stack_top:
 handler_start: 
     mov KEEP_SS, ss
     mov KEEP_SP, sp
     mov KEEP_AX, ax
     mov ax, seg HANDLER_STACK
     mov ss, ax
-    add ax, 100h
-    mov sp, ax
-
+    lea sp, stack_top
+    push ax
     push bx
     push cx
     push dx
@@ -30,7 +29,7 @@ handler_start:
     push bp
     push es
     
-    mov ax, seg HANDLER_DATA
+    mov ax, seg HANDLER_STACK
     mov ds, ax
     inc COUNT
     mov ax, COUNT
@@ -72,6 +71,7 @@ handler_start:
     pop dx
     pop cx
     pop bx
+    pop ax
     mov sp, KEEP_SP
     mov ax, KEEP_SS
     mov ss, ax
@@ -79,7 +79,6 @@ handler_start:
     mov al, 20h
     out 20h, al
     iret
-
 ROUT ENDP
 LAST_BYTE:
 
@@ -127,6 +126,7 @@ end_l1:
    ret
 WRD_TO_DEC ENDP
 
+
 LOAD proc near
     push ax
     push bx
@@ -168,36 +168,28 @@ LOAD proc near
 LOAD ENDP
 
 UNLOAD proc near
+    cli
     push ax
     push bx
     push dx
-    push ds
     push es
     push si
+    push ds
 
     mov ah, 35h
     mov al, 1ch
     int 21h
-    lea si, HANDLER_SIGN
+    lea si, KEEP_IP
     sub si, offset ROUT
-    mov ax, es:[bx+si]
-    cmp ax, 4200h
-    jne end_unload
-
-    lea si, KEEP_CS
-    sub si, offset ROUT
-    cli
     
-    push ds
-    mov dx, es:[bx+si+2]
-    mov ax, es:[bx+si]
+    mov dx, es:[bx+si]
+    mov ax, es:[bx+si+2]
     mov ds, ax
     mov ah, 25h
     mov al, 1ch
     int 21h
     pop ds
     
-    sti
     mov ax, es:[bx+si+4]
     mov es, ax
 
@@ -214,10 +206,10 @@ UNLOAD proc near
 end_unload:
     pop si
     pop es
-    pop ds
     pop dx
     pop bx
     pop ax
+    sti
     ret
 UNLOAD ENDP
 
@@ -233,25 +225,37 @@ MAIN proc far
     mov ax, DATA
     mov ds, ax
     mov KEEP_PSP, es
-    cmp byte ptr es:[81h+1], '/'
-    jne not_un
-    cmp byte ptr es:[81h+2], 'u'
-    jne not_un
-    cmp byte ptr es:[81h+3], 'n'
-    jne not_un
-    call UNLOAD
-    lea dx, M_NOT_LOADED
-    call WRITE
-    jmp exit
-
-not_un:
     call CHECK_IS_LOAD
     mov al, IS_LOAD
     cmp al, 1
-    je end_main
+    je loaded
+    jmp n_loaded
+loaded:
+    cmp byte ptr es:[81h+1], '/'
+    jne end_main_loaded
+    cmp byte ptr es:[81h+2], 'u'
+    jne end_main_loaded
+    cmp byte ptr es:[81h+3], 'n'
+    jne end_main_loaded
+    call UNLOAD
+    jmp end_main_not_loaded
+n_loaded:
+    cmp byte ptr es:[81h+1], '/'
+    jne load_handler
+    cmp byte ptr es:[81h+2], 'u'
+    jne load_handler
+    cmp byte ptr es:[81h+3], 'n'
+    jne load_handler
+    jmp end_main_not_loaded
+load_handler:
     call LOAD
-end_main:
-    lea dx, M_LOADED
+    
+end_main_loaded:
+    lea dx, M_ALREADY_LOADED
+    call WRITE
+    jmp exit
+end_main_not_loaded:
+    lea dx, M_NOT_LOADED
     call WRITE
 exit:
     xor al, al
@@ -265,9 +269,9 @@ AStack ENDS
 
 DATA SEGMENT
     IS_LOAD DB 0
-    M_LOADED DB 'Обработчик загружен',0Dh,0Ah,'$'
-    M_NOT_LOADED DB 'Обработчик выгружен',0Dh,0Ah,'$'
-
+    M_LOADED DB 'Обработчик загружен!',0Dh,0Ah,'$'
+    M_NOT_LOADED DB 'Обработчик выгружен!',0Dh,0Ah,'$'
+    M_ALREADY_LOADED DB 'Обработчик уже загружен!' ,0Dh,0Ah,'$'
 DATA ENDS
 
 END MAIN
