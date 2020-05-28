@@ -59,6 +59,7 @@ shrink_memory proc near
     push cx
     push di
     push si
+    mov bx, offset code_end
     mov ax, es
     sub bx, ax ; get the amount of memory this program use 
     mov cl, 4
