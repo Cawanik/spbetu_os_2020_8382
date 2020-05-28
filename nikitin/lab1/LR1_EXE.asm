@@ -15,7 +15,7 @@ DATA SEGMENT
 	old db '<2.0',10,13,'$'
 	new db '0x.0y',10,13,'$'
 	ser db 'Serial number of OEM is ','$'
-	ser2 db 10,13,'Seriel user number is ','$'
+	ser2 db 10,13,'Serial user number is ','$'
 DATA ENDS
 
 CODE SEGMENT
@@ -93,39 +93,58 @@ BEGIN PROC far
 
 	mov  AX, DATA
 	mov  DS, AX
-	mov ax,0F000h
-	mov es,ax 
-	mov al,es:[0FFFEh] 
-	mov DX,offset TypePc
-	mov AH,09h
+	
+	mov AX, 0F000h
+	mov ES, AX
+	mov AL, ES:[0FFFEh]
+	
+	mov DX, offset TypePC
+	mov AH, 09h
 	int 21h
-	mov DX,offset FF
-	cmp al, 0FFh
+	
+	mov DX, offset FF
+	cmp AL, 0FFh
 	je COMPL
-	mov DX,offset FE_FB
-	cmp al, 0FEh
+	
+	mov DX, offset FE_FB
+	cmp AL, 0FEh
 	je COMPL
-	cmp al, 0FBh
+	
+	cmp AL, 0FBh
 	je COMPL
-	mov DX,offset FC
-	cmp al, 0FCh
+	
+	mov DX, offset FC
+	cmp AL, 0FCh
 	je COMPL
-	mov DX,offset FA
-	cmp al, 0FAh
+	
+	mov DX, offset FA
+	cmp AL, 0FAh
 	je COMPL
-	mov DX,offset F8
-	cmp al, 0F8h
+	
+	mov DX, offset F8
+	cmp AL, 0F8h
 	je COMPL
-	mov DX,offset FD
-	cmp al, 0FDh
+	
+	mov DX, offset FD
+	cmp AL, 0FDh
 	je COMPL
-	mov DX,offset F9
-	cmp al, 0F9h
-	jne EXCEPT
-
-EXCEPT:
-
-	call PRINT
+	
+	mov DX, offset F9
+	cmp AL, 0F9h
+	je COMPL
+	
+	push CX
+	push DX
+	call BYTE_TO_HEX
+	mov CH, AH
+	mov DL, AL
+	mov AH, 02h
+	int 21h
+	mov DL, CH
+	mov AH, 02h
+	int 21h
+	pop DX
+	pop CX
 
 COMPL:
 
@@ -137,11 +156,12 @@ COMPL:
 	mov AH,30h
 	int 21h
 	cmp AL,0
-	jne MOD
+	jne MODI
 	mov DX,offset old
 	mov AH,09h
 	int 21h
-MOD:
+
+MODI:
 
 	mov SI,offset new
 	add SI,1
@@ -172,11 +192,50 @@ MOD:
 	mov AH,09h
 	int 21h
 	mov AL, BL
-	call PRINT
+	
+	push CX
+	push DX
+	call BYTE_TO_HEX
+	mov CH, AH
+	mov DL, AL
+	mov AH, 02h
+	int 21h
+	mov DL, CH
+	mov AH, 02h
+	int 21h
+	pop DX
+	pop CX
+	
 	mov AL, CH
-	call PRINT
+	
+	push CX
+	push DX
+	call BYTE_TO_HEX
+	mov CH, AH
+	mov DL, AL
+	mov AH, 02h
+	int 21h
+	mov DL, CH
+	mov AH, 02h
+	int 21h
+	pop DX
+	pop CX
+	
 	mov AL, CL
-	call PRINT
+	
+	push CX
+	push DX
+	call BYTE_TO_HEX
+	mov CH, AH
+	mov DL, AL
+	mov AH, 02h
+	int 21h
+	mov DL, CH
+	mov AH, 02h
+	int 21h
+	pop DX
+	pop CX
+	
 	xor AL,AL
 	mov AH,4Ch
 	int 21H
