@@ -22,7 +22,7 @@ my_int_begin:
 	mov ax, seg my_int_stack
 	mov ss, ax
 	mov sp, offset my_int_stack
-	add sp, 120h
+	add sp, 100h
 	
 	push ax
 	push bx
