@@ -4,12 +4,12 @@ CODE SEGMENT
 MY_INT PROC FAR
 	jmp my_int_begin
 my_int_data:
-	keep_ip dw 0
-	keep_cs dw 0
+	keep_ip  dw 0
+	keep_cs  dw 0
 	keep_psp dw 0
-	keep_ax dw 0
-	keep_ss dw 0
-	keep_sp dw 0
+	keep_ax  dw 0
+	keep_ss  dw 0
+	keep_sp  dw 0
 	my_int_flag dw 0BABAh
 	REQ_KEY db 3bh ;change
 	my_int_stack dw 100h dup(?)
@@ -24,8 +24,13 @@ my_int_begin:
 	add sp, 100h
 	
 	push ax
-	push cx
-	push es
+    push bx
+    push cx
+    push dx
+    push si
+    push ds
+    push bp
+    push es
 	mov ax, seg my_int_data
 	mov ds, ax
 
@@ -65,8 +70,13 @@ skip:
 	
 int_end:
 	pop es
-	pop cx
-	pop ax
+    pop bp
+    pop ds
+    pop si
+    pop dx
+    pop cx
+    pop bx
+    pop ax
 	
 	mov sp, keep_sp
 	mov ax, keep_ss
