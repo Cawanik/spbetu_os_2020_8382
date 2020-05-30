@@ -1,0 +1,15 @@
+/*.map
+/*.obj
+/test*
+ASM.BAT
+DPMI16BI.OVL
+DPMIMEM.DLL
+TASM.EXE
+TD.EXE
+TLINK.EXE
+dpmiload.exe
+exe2bin.exe
+/*.doc
+/*.docx
+asm_over.bat
+over1.exe
