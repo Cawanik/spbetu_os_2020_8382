@@ -38,6 +38,7 @@ MY_HANDLER PROC far;мой обработчик
 		push ds
 		push dx
 		push si
+		push bp
 
 		mov ax, seg HANDLER_DATA
 		mov ds, ax
@@ -54,6 +55,7 @@ MY_HANDLER PROC far;мой обработчик
 		mov bp, offset COUNTER_STR
 		call OUTPUT		
 		
+		pop bp
 		pop si
 		pop dx
 		pop ds
