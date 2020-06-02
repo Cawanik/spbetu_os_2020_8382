@@ -171,12 +171,14 @@ edge_loop:
     loop edge_loop
 
     call WRITE_ENDL
+    jmp enviroment_data
 
 no_edge:
     mov dx, offset NO_COMMAND_LINE_EGDE
     mov ah, 09h
     int 21h
 
+enviroment_data:
     ; Вывод данных области среды
     mov dx, offset ENVIDOMENT_DATA
     mov ah, 09h
