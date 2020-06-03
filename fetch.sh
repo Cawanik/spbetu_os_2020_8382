@@ -15,6 +15,6 @@ git fetch a-kuzina         # Кузина
 git fetch smotritetamptiza # Кулачкова
 git fetch nechepurenkoN    # Нечепуренко
 git fetch Cawanik          # Никитин
-git fetch filtsin          # Фильцин
+#git fetch filtsin          # Фильцин
 git fetch Gargamell1       # Щеглов
 git fetch Anakael          # Щемель
