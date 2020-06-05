@@ -37,12 +37,12 @@ START:
 	push DS
 	push BP
 	push ES
-    in AL, 60h
-    cmp AL, 2Ah 
+    	in AL, 60h
+    	cmp AL, 2Ah 
 		je DO_REQ
 	pushf
 	call dword ptr CS:KEEP_IP;
-    jmp ENDING;
+    	jmp ENDING;
 DO_REQ:
 	in AL, 61h 
 	mov AH, AL 
@@ -129,35 +129,35 @@ UNLOAD_INTER PROC near
 	push ES
 	push SI
 	cli 
-	mov	AH, 35h
-	mov	AL, 09h
-	int	21h
-	mov	SI, offset KEEP_IP
-	sub	SI, offset ROUT		
+	mov AH, 35h
+	mov AL, 09h
+	int 21h
+	mov SI, offset KEEP_IP
+	sub SI, offset ROUT		
 	push DS
-	mov	DX, ES:[BX + SI]
-	mov	AX, ES:[BX + SI + 2]
-	mov	DS, AX
-	mov	AH, 25h
-	mov	AL, 09h
-	int	21h
-	pop	DS	
-	mov	AX, ES:[BX + SI + 4]
-	mov	ES, AX
+	mov DX, ES:[BX + SI]
+	mov AX, ES:[BX + SI + 2]
+	mov DS, AX
+	mov AH, 25h
+	mov AL, 09h
+	int 21h
+	pop DS	
+	mov AX, ES:[BX + SI + 4]
+	mov ES, AX
 	push ES
-	mov	AX, ES:[2Ch]
-	mov	ES, AX
-	mov	AH, 49h
-	int	21h
-	pop	ES
-	mov	AH, 49h
-	int	21h
+	mov AX, ES:[2Ch]
+	mov ES, AX
+	mov AH, 49h
+	int 21h
+	pop ES
+	mov AH, 49h
+	int 21h
 	sti
-	pop	SI
-	pop	ES
-	pop	DX
-	pop	BX
-	pop	AX
+	pop SI
+	pop ES
+	pop DX
+	pop BX
+	pop AX
 	ret
 UNLOAD_INTER ENDP
 
